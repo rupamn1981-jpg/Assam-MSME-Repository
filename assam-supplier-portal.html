@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assam Supplier Portal (ASP)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A1628;
+    --navy-light: #122040;
+    --blue: #1B4FD8;
+    --blue-light: #2563EB;
+    --accent: #F59E0B;
+    --accent-light: #FCD34D;
+    --teal: #0EA5E9;
+    --green: #10B981;
+    --red: #EF4444;
+    --orange: #F97316;
+    --surface: #F8FAFF;
+    --surface2: #EEF2FF;
+    --border: #DDE5FF;
+    --text: #0A1628;
+    --text-muted: #6B7280;
+    --text-light: #9CA3AF;
+    --white: #FFFFFF;
+    --sidebar-w: 260px;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ===== LOGIN SCREEN ===== */
+  #login-screen {
+    background: var(--navy);
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-bg {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(27,79,216,0.35) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 10% 80%, rgba(14,165,233,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse 30% 30% at 50% 50%, rgba(245,158,11,0.08) 0%, transparent 70%);
+  }
+
+  .login-grid {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .login-card {
+    position: relative; z-index: 2;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 48px;
+    width: 440px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    animation: cardIn 0.5s ease;
+  }
+
+  @keyframes cardIn {
+    from { opacity:0; transform: translateY(20px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+
+  .login-logo {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .login-logo .emblem {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+
+  .login-logo h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: white;
+    line-height: 1.2;
+  }
+
+  .login-logo span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    display: block;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .login-tagline {
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .role-label {
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+
+  .role-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px; margin-bottom: 24px;
+  }
+
+  .role-btn {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+    padding: 12px 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    color: rgba(255,255,255,0.6);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+  }
+
+  .role-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+
+  .role-btn.active {
+    background: rgba(27,79,216,0.4);
+    border-color: rgba(37,99,235,0.6);
+    color: white;
+  }
+
+  .role-btn .role-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+
+  .form-group { margin-bottom: 16px; }
+
+  .form-label {
+    display: block;
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    margin-bottom: 6px;
+    letter-spacing: 0.03em;
+  }
+
+  .form-input {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus { border-color: rgba(37,99,235,0.7); }
+  .form-input::placeholder { color: rgba(255,255,255,0.25); }
+
+  .login-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--blue), var(--blue-light));
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+  }
+
+  .login-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+  .login-hint {
+    text-align: center;
+    margin-top: 16px;
+    color: rgba(255,255,255,0.35);
+    font-size: 12px;
+  }
+
+  /* ===== APP SHELL ===== */
+  #app-screen { flex-direction: column; }
+
+  .topbar {
+    height: 56px;
+    background: var(--navy);
+    display: flex; align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+  }
+
+  .topbar-logo {
+    display: flex; align-items: center; gap: 10px;
+    color: white; font-family: 'DM Serif Display', serif;
+    font-size: 15px; text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .topbar-emblem {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+  }
+
+  .topbar-sep { width: 1px; height: 28px; background: rgba(255,255,255,0.1); }
+
+  .topbar-title {
+    flex: 1;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+  }
+
+  .topbar-user {
+    display: flex; align-items: center; gap: 10px;
+    color: white;
+  }
+
+  .user-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .user-info { font-size: 13px; }
+  .user-role { font-size: 11px; color: rgba(255,255,255,0.45); }
+
+  .logout-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.7);
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    margin-left: 8px;
+  }
+
+  .logout-btn:hover { background: rgba(255,255,255,0.14); color: white; }
+
+  .app-body { display: flex; flex: 1; overflow: hidden; height: calc(100vh - 56px); }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: white;
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+    overflow-y: auto;
+    padding: 16px 0;
+  }
+
+  .sidebar-section {
+    padding: 0 12px;
+    margin-bottom: 8px;
+  }
+
+  .sidebar-section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-light);
+    padding: 8px 8px 4px;
+    font-weight: 600;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 13.5px;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+
+  .nav-item.active {
+    background: #EEF4FF;
+    color: var(--blue);
+    font-weight: 500;
+  }
+
+  .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--blue);
+    color: white;
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .nav-badge.amber { background: var(--accent); }
+  .nav-badge.green { background: var(--green); }
+
+  /* ===== MAIN CONTENT ===== */
+  .main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px;
+    background: var(--surface);
+  }
+
+  .page { display: none; }
+  .page.active { display: block; animation: pageIn 0.25s ease; }
+
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== COMPONENTS ===== */
+  .page-header {
+    margin-bottom: 24px;
+  }
+
+  .page-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+
+  .page-header p { color: var(--text-muted); font-size: 14px; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  .stat-card.blue::before { background: linear-gradient(90deg, var(--blue), var(--teal)); }
+  .stat-card.amber::before { background: linear-gradient(90deg, var(--accent), var(--orange)); }
+  .stat-card.green::before { background: linear-gradient(90deg, var(--green), var(--teal)); }
+  .stat-card.navy::before { background: linear-gradient(90deg, var(--navy), var(--blue)); }
+
+  .stat-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 30px;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label { color: var(--text-muted); font-size: 13px; }
+
+  .stat-change {
+    font-size: 12px;
+    margin-top: 6px;
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  .stat-change.red { color: var(--red); }
+
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-title {
+    font-size: 15px; font-weight: 600; color: var(--navy);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  th {
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  /* Badges */
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+
+  .badge.blue { background: #DBEAFE; color: #1D4ED8; }
+  .badge.green { background: #D1FAE5; color: #065F46; }
+  .badge.amber { background: #FEF3C7; color: #92400E; }
+  .badge.red { background: #FEE2E2; color: #991B1B; }
+  .badge.gray { background: #F3F4F6; color: #374151; }
+  .badge.teal { background: #CCFBF1; color: #134E4A; }
+  .badge.navy { background: #EEF4FF; color: var(--navy); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--blue);
+    color: white;
+  }
+
+  .btn-primary:hover { background: var(--navy); }
+
+  .btn-outline {
+    background: white;
+    color: var(--blue);
+    border: 1px solid var(--border);
+  }
+
+  .btn-outline:hover { background: var(--surface2); }
+
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+
+  .btn-success { background: var(--green); color: white; }
+  .btn-success:hover { background: #059669; }
+  .btn-danger { background: var(--red); color: white; }
+  .btn-danger:hover { background: #DC2626; }
+  .btn-amber { background: var(--accent); color: white; }
+
+  /* Progress */
+  .progress-bar {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--blue), var(--teal));
+    transition: width 0.8s ease;
+  }
+
+  /* Form */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-full { margin-bottom: 14px; }
+
+  .field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .field-input, .field-select, .field-textarea {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+    background: white;
+  }
+
+  .field-input:focus, .field-select:focus, .field-textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(27,79,216,0.08);
+  }
+
+  .field-textarea { resize: vertical; min-height: 80px; }
+
+  /* Alert/Notice */
+  .notice {
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 13.5px;
+    display: flex; gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .notice.blue { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; }
+  .notice.amber { background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; }
+  .notice.green { background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 6px; bottom: 6px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .timeline-item { position: relative; margin-bottom: 20px; }
+
+  .timeline-dot {
+    position: absolute;
+    left: -24px; top: 3px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--blue);
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--blue);
+  }
+
+  .timeline-dot.green { background: var(--green); box-shadow: 0 0 0 2px var(--green); }
+  .timeline-dot.amber { background: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+  .timeline-dot.gray { background: var(--text-light); box-shadow: 0 0 0 2px var(--text-light); }
+
+  .timeline-meta { font-size: 12px; color: var(--text-light); margin-bottom: 2px; }
+  .timeline-text { font-size: 13.5px; color: var(--text); }
+
+  /* KPI Row */
+  .kpi-row {
+    display: flex; gap: 16px;
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    color: white;
+  }
+
+  .kpi-item { flex: 1; }
+  .kpi-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    margin-bottom: 2px;
+    color: var(--accent-light);
+  }
+  .kpi-lbl { font-size: 12px; color: rgba(255,255,255,0.55); }
+
+  .kpi-divider { width: 1px; background: rgba(255,255,255,0.1); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(10,22,40,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    width: 560px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+    animation: modalIn 0.2s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .modal h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    margin-bottom: 6px;
+    color: var(--navy);
+  }
+
+  .modal-sub { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
+
+  .modal-footer {
+    display: flex; gap: 10px; justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .search-box {
+    display: flex; align-items: center; gap: 8px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    flex: 1; max-width: 320px;
+  }
+
+  .search-box input {
+    border: none; outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    width: 100%;
+    background: transparent;
+  }
+
+  .search-box input::placeholder { color: var(--text-light); }
+
+  .filter-select {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: white;
+    outline: none;
+    cursor: pointer;
+  }
+
+  /* Notification dot */
+  .notif { position: relative; }
+  .notif-dot {
+    position: absolute; top: -2px; right: -2px;
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex; gap: 4px;
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 4px;
+    margin-bottom: 20px;
+    width: fit-content;
+  }
+
+  .tab-btn {
+    padding: 7px 18px;
+    border: none; background: transparent;
+    border-radius: 6px;
+    font-size: 13px; font-family: 'DM Sans', sans-serif;
+    color: var(--text-muted); cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tab-btn.active {
+    background: white;
+    color: var(--navy);
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  /* Phase tracker */
+  .phase-tracker {
+    display: flex; gap: 0;
+    margin-bottom: 24px;
+  }
+
+  .phase-step {
+    flex: 1; text-align: center;
+    padding: 12px 8px;
+    position: relative;
+    font-size: 12px;
+  }
+
+  .phase-step::after {
+    content: '';
+    position: absolute;
+    top: 50%; right: -12px;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border-left: 12px solid var(--border);
+    border-top: 16px solid transparent;
+    border-bottom: 16px solid transparent;
+    z-index: 1;
+  }
+
+  .phase-step:last-child::after { display: none; }
+
+  .phase-step.done { background: #ECFDF5; color: var(--green); }
+  .phase-step.active-phase { background: #EFF6FF; color: var(--blue); font-weight: 600; }
+  .phase-step.pending { background: var(--surface2); color: var(--text-muted); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--navy);
+    color: white;
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    z-index: 999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* Misc helpers */
+  .flex { display: flex; }
+  .flex-center { display: flex; align-items: center; }
+  .gap-8 { gap: 8px; }
+  .gap-12 { gap: 12px; }
+  .ml-auto { margin-left: auto; }
+  .mb-8 { margin-bottom: 8px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-20 { margin-bottom: 20px; }
+  .text-muted { color: var(--text-muted); }
+  .text-sm { font-size: 12px; }
+  .text-green { color: var(--green); }
+  .text-red { color: var(--red); }
+  .text-blue { color: var(--blue); }
+  .fw-600 { font-weight: 600; }
+  .serif { font-family: 'DM Serif Display', serif; }
+
+  /* Demand item card */
+  .demand-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 10px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .demand-card:hover { border-color: var(--blue); box-shadow: 0 2px 8px rgba(27,79,216,0.08); }
+
+  .demand-card .d-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .demand-card .d-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .demand-card .d-footer { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+  /* Section divider */
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+  /* Match score */
+  .match-score {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .match-score.high { background: #D1FAE5; color: #065F46; }
+  .match-score.med { background: #FEF3C7; color: #92400E; }
+
+  .action-row {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+
+  /* Checklist */
+  .checklist { list-style: none; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="login-screen" class="screen active">
+  <div class="login-bg"></div>
+  <div class="login-grid"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="emblem">🏛️</div>
+      <div>
+        <h1>Assam Supplier Portal</h1>
+        <span>Government of Assam · DoIC&PE</span>
+      </div>
+    </div>
+    <p class="login-tagline">Connecting anchor industries with local MSMEs to build Assam's supply chain ecosystem.</p>
+
+    <p class="role-label">Select your role</p>
+    <div class="role-grid">
+      <button class="role-btn" onclick="selectRole('govt')" id="role-govt">
+        <span class="role-icon">🏛️</span>
+        Government
+      </button>
+      <button class="role-btn" onclick="selectRole('anchor')" id="role-anchor">
+        <span class="role-icon">🏭</span>
+        Anchor Industry
+      </button>
+      <button class="role-btn active" onclick="selectRole('msme')" id="role-msme">
+        <span class="role-icon">🔧</span>
+        MSME / Supplier
+      </button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Email / User ID</label>
+      <input id="login-user" class="form-input" placeholder="Enter your credentials" value="supplier@assam.in">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" placeholder="••••••••" value="password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In to Portal →</button>
+    <p class="login-hint">Govt portal · Try all 3 roles</p>
+  </div>
+</div>
+
+<!-- ===== APP SCREEN ===== -->
+<div id="app-screen" class="screen">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="topbar-emblem">🏛️</div>
+      ASP
+    </div>
+    <div class="topbar-sep"></div>
+    <div class="topbar-title" id="topbar-title">Assam Supplier Portal</div>
+    <div class="topbar-user">
+      <div id="user-avatar" class="user-avatar" style="background: var(--blue);">U</div>
+      <div>
+        <div id="user-name" class="user-info fw-600">User</div>
+        <div id="user-role-label" class="user-role">Role</div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar"></div>
+
+    <!-- Main -->
+    <div class="main-content" id="main-content">
+      <!-- Pages will be injected here -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast">✅ <span id="toast-msg"></span></div>
+
+<script>
+// ===== STATE =====
+let currentRole = 'msme';
+let currentPage = '';
+
+const ROLES = {
+  govt: {
+    label: 'Government Admin',
+    name: 'Adm. Priya Sharma',
+    avatar: 'PS',
+    avatarColor: '#1B4FD8',
+    roleLabel: 'SLMC · Commissioner Industries',
+    title: 'Leadership Dashboard',
+    nav: [
+      { section: 'Overview', items: [
+        { id: 'dashboard', icon: '📊', label: 'Leadership Dashboard', badge: '' },
+        { id: 'demand-map', icon: '🗺️', label: 'Demand Mapping', badge: '105' },
+        { id: 'supplier-registry', icon: '🗂️', label: 'Supplier Registry', badge: '' },
+      ]},
+      { section: 'Operations', items: [
+        { id: 'vendor-approval', icon: '✅', label: 'Vendor Approvals', badge: '12', badgeColor: 'amber' },
+        { id: 'matchmaking', icon: '🤝', label: 'AI Matchmaking', badge: '' },
+        { id: 'analytics', icon: '📈', label: 'Analytics & Reports', badge: '' },
+      ]},
+      { section: 'Programs', items: [
+        { id: 'vdp', icon: '🎓', label: 'Vendor Dev Program', badge: '' },
+        { id: 'incentives', icon: '💰', label: 'Incentive Tracking', badge: '' },
+        { id: 'implementation', icon: '🗓️', label: 'Implementation Plan', badge: '' },
+      ]},
+    ]
+  },
+  anchor: {
+    label: 'Anchor Industry',
+    name: 'Mr. Rahul Mehta',
+    avatar: 'RM',
+    avatarColor: '#F59E0B',
+    roleLabel: 'TSAT Semiconductor · Procurement Head',
+    title: 'Industry Procurement Portal',
+    nav: [
+      { section: 'Procurement', items: [
+        { id: 'anchor-dashboard', icon: '📊', label: 'My Dashboard', badge: '' },
+        { id: 'post-demand', icon: '📋', label: 'Post Requirements', badge: '' },
+        { id: 'my-demands', icon: '📦', label: 'My Demand Listings', badge: '6' },
+        { id: 'matchmaking', icon: '🤝', label: 'Matched Suppliers', badge: '23' },
+      ]},
+      { section: 'Suppliers', items: [
+        { id: 'approved-vendors', icon: '✅', label: 'Approved Vendors', badge: '18' },
+        { id: 'vendor-pipeline', icon: '🔄', label: 'Vendor Pipeline', badge: '5', badgeColor: 'amber' },
+      ]},
+      { section: 'Compliance', items: [
+        { id: 'localisation-report', icon: '📊', label: 'Localisation Report', badge: '' },
+      ]},
+    ]
+  },
+  msme: {
+    label: 'MSME Supplier',
+    name: 'Bikash Bora Enterprises',
+    avatar: 'BB',
+    avatarColor: '#10B981',
+    roleLabel: 'MSME · Packaging & Fabrication',
+    title: 'Supplier Dashboard',
+    nav: [
+      { section: 'My Portal', items: [
+        { id: 'msme-dashboard', icon: '📊', label: 'My Dashboard', badge: '' },
+        { id: 'my-profile', icon: '🏢', label: 'Company Profile', badge: '' },
+        { id: 'browse-demands', icon: '🔍', label: 'Browse Opportunities', badge: '8', badgeColor: 'green' },
+        { id: 'my-applications', icon: '📋', label: 'My Applications', badge: '3' },
+      ]},
+      { section: 'Development', items: [
+        { id: 'vdp-enroll', icon: '🎓', label: 'Training Programs', badge: '' },
+        { id: 'finance-support', icon: '🏦', label: 'Finance & TReDS', badge: '' },
+        { id: 'certifications', icon: '🏅', label: 'Certifications', badge: '' },
+      ]},
+    ]
+  }
+};
+
+// ===== DATA =====
+const DEMANDS = [
+  { id: 1, company: 'TSAT Semiconductor', sector: 'Electronics', item: 'PCB Protective Packaging', qty: '50,000 units/month', value: '₹18L/month', deadline: '30 Jun 2025', status: 'open', criteria: ['ISO 9001', 'ESD Safe'], urgency: 'high' },
+  { id: 2, company: 'Hindustan Coca-Cola', sector: 'FMCG', item: 'PET Bottle Preforms', qty: '2L units/month', value: '₹45L/month', deadline: '15 Jul 2025', status: 'open', criteria: ['FSSAI', 'BIS'], urgency: 'medium' },
+  { id: 3, company: 'ADANI Power Assam', sector: 'Energy', item: 'Cable Harness Assembly', qty: '800 units/month', value: '₹22L/month', deadline: '1 Aug 2025', status: 'open', criteria: ['ISO 9001', 'IS 694'], urgency: 'medium' },
+  { id: 4, company: 'ITC Limited', sector: 'FMCG', item: 'Corrugated Packaging Boxes', qty: '1.2L units/month', value: '₹12L/month', deadline: '20 Jun 2025', status: 'open', criteria: ['FSSAI', 'BIS Mark'], urgency: 'high' },
+  { id: 5, company: 'OIL India', sector: 'Oil & Gas', item: 'Industrial Gaskets & Seals', qty: '2,000 units/month', value: '₹8L/month', deadline: '10 Aug 2025', status: 'open', criteria: ['API 6A', 'ISO 9001'], urgency: 'low' },
+  { id: 6, company: 'NRL', sector: 'Oil & Gas', item: 'Maintenance Tools Kit', qty: '200 sets/quarter', value: '₹6L/quarter', deadline: '30 Sep 2025', status: 'open', criteria: ['ISO 9001'], urgency: 'low' },
+];
+
+const SUPPLIERS = [
+  { id: 1, name: 'Bikash Bora Enterprises', district: 'Kamrup', sector: 'Packaging', turnover: '₹2.4Cr', employees: 38, status: 'approved', certs: ['ISO 9001', 'FSSAI'], score: 87 },
+  { id: 2, name: 'North East Fabricators', district: 'Dibrugarh', sector: 'Metal Fabrication', turnover: '₹3.8Cr', employees: 52, status: 'approved', certs: ['ISO 9001', 'BIS'], score: 91 },
+  { id: 3, name: 'Assam Polymers Ltd', district: 'Guwahati', sector: 'Plastics/Polymers', turnover: '₹5.1Cr', employees: 67, status: 'approved', certs: ['BIS', 'FSSAI'], score: 84 },
+  { id: 4, name: 'GreenTech Electronics NE', district: 'Jorhat', sector: 'Electronics', turnover: '₹1.2Cr', employees: 24, status: 'pending', certs: ['ISO 9001'], score: 72 },
+  { id: 5, name: 'Brahmaputra Cables', district: 'Silchar', sector: 'Electrical', turnover: '₹4.2Cr', employees: 78, status: 'pending', certs: ['IS 694'], score: 79 },
+  { id: 6, name: 'Majuli Handicrafts Unit', district: 'Majuli', sector: 'Handicrafts', turnover: '₹0.6Cr', employees: 15, status: 'registered', certs: [], score: 58 },
+];
+
+const MY_APPLICATIONS = [
+  { id: 1, demand_id: 1, company: 'TSAT Semiconductor', item: 'PCB Protective Packaging', applied: '12 Apr 2025', status: 'shortlisted', next: 'Factory audit on 5 May' },
+  { id: 2, demand_id: 4, company: 'ITC Limited', item: 'Corrugated Packaging Boxes', applied: '3 Apr 2025', status: 'under-review', next: 'Document verification' },
+  { id: 3, demand_id: 2, company: 'Hindustan Coca-Cola', item: 'PET Bottle Preforms', applied: '20 Mar 2025', status: 'rejected', next: 'FSSAI cert required' },
+];
+
+const TIMELINE_EVENTS = [
+  { date: 'Apr 28, 2025', text: 'Profile verified by CI&C office', type: 'green' },
+  { date: 'Apr 15, 2025', text: 'Application submitted for TSAT demand #1', type: 'blue' },
+  { date: 'Apr 3, 2025', text: 'Applied for ITC corrugated packaging opportunity', type: 'blue' },
+  { date: 'Mar 20, 2025', text: 'Registered on Assam Supplier Portal', type: 'green' },
+];
+
+// ===== AUTH =====
+function selectRole(role) {
+  currentRole = role;
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('role-' + role).classList.add('active');
+  const demos = { govt: 'admin@assamgov.in', anchor: 'procurement@tsat.in', msme: 'supplier@bbenterprises.in' };
+  document.getElementById('login-user').value = demos[role];
+}
+
+function doLogin() {
+  const r = ROLES[currentRole];
+  document.getElementById('login-screen').classList.remove('active');
+  document.getElementById('app-screen').classList.add('active');
+
+  document.getElementById('user-avatar').textContent = r.avatar;
+  document.getElementById('user-avatar').style.background = r.avatarColor;
+  document.getElementById('user-name').textContent = r.name;
+  document.getElementById('user-role-label').textContent = r.roleLabel;
+  document.getElementById('topbar-title').textContent = r.title;
+
+  buildSidebar();
+  // Navigate to default page
+  const firstPage = ROLES[currentRole].nav[0].items[0].id;
+  navigate(firstPage);
+}
+
+function logout() {
+  document.getElementById('app-screen').classList.remove('active');
+  document.getElementById('login-screen').classList.add('active');
+}
+
+// ===== SIDEBAR =====
+function buildSidebar() {
+  const r = ROLES[currentRole];
+  let html = '';
+  r.nav.forEach(section => {
+    html += `<div class="sidebar-section">
+      <div class="sidebar-section-label">${section.section}</div>`;
+    section.items.forEach(item => {
+      const badgeClass = item.badgeColor || 'default';
+      const badge = item.badge ? `<span class="nav-badge ${item.badgeColor || ''}">${item.badge}</span>` : '';
+      html += `<div class="nav-item" id="nav-${item.id}" onclick="navigate('${item.id}')">
+        <span class="nav-icon">${item.icon}</span>
+        <span>${item.label}</span>
+        ${badge}
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('sidebar').innerHTML = html;
+}
+
+function navigate(pageId) {
+  currentPage = pageId;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + pageId);
+  if (navEl) navEl.classList.add('active');
+
+  const renderer = pageRenderers[pageId];
+  if (renderer) {
+    document.getElementById('main-content').innerHTML = renderer();
+  } else {
+    document.getElementById('main-content').innerHTML = `<div class="page active"><div class="page-header"><h2>Page Under Construction</h2><p>${pageId}</p></div></div>`;
+  }
+}
+
+// ===== PAGE RENDERERS =====
+const pageRenderers = {
+
+  // ---- GOVT: Leadership Dashboard ----
+  'dashboard': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Leadership Dashboard</h2>
+        <p>Executive overview · Assam Supplier Localisation Mission Cell (SLMC)</p>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-item"><div class="kpi-val">₹5.7L Cr</div><div class="kpi-lbl">Total Committed Investment</div></div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item"><div class="kpi-val">2,03,736</div><div class="kpi-lbl">Jobs Committed</div></div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item"><div class="kpi-val">412</div><div class="kpi-lbl">Total Anchor Units</div></div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item"><div class="kpi-val">₹2,519 Cr</div><div class="kpi-lbl">Local Procurement (YTD)</div></div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item"><div class="kpi-val">18.4%</div><div class="kpi-lbl">Localisation Rate</div></div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <span class="stat-icon">🏭</span>
+          <div class="stat-value">105</div>
+          <div class="stat-label">Projects Announced</div>
+          <div class="stat-change">↑ Phase 2 (85 projects)</div>
+        </div>
+        <div class="stat-card green">
+          <span class="stat-icon">🔧</span>
+          <div class="stat-value">1,847</div>
+          <div class="stat-label">MSMEs Registered</div>
+          <div class="stat-change">↑ 234 this month</div>
+        </div>
+        <div class="stat-card amber">
+          <span class="stat-icon">✅</span>
+          <div class="stat-value">342</div>
+          <div class="stat-label">Approved Vendors</div>
+          <div class="stat-change">↑ 28 pending review</div>
+        </div>
+        <div class="stat-card navy">
+          <span class="stat-icon">🤝</span>
+          <div class="stat-value">₹8,340 Cr</div>
+          <div class="stat-label">Demand Mapped</div>
+          <div class="stat-change">↑ 83% of ₹10,000Cr target</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📊 Month 18 Target Progress</div>
+            <span class="badge blue">On Track</span>
+          </div>
+          ${[
+            { label: 'Anchor industries onboarded', val: 72, target: 100, unit: '' },
+            { label: 'Procurement demand mapped', val: 83, target: 100, unit: '% of ₹10,000Cr' },
+            { label: 'MSMEs registered', val: 92, target: 100, unit: '% of 2,000 target' },
+            { label: 'Approved vendors', val: 68, target: 100, unit: '% of 500 target' },
+            { label: 'Local procurement increase', val: 61, target: 100, unit: '% of 30% target' },
+            { label: 'Indirect jobs created', val: 47, target: 100, unit: '% of 25,000 target' },
+          ].map(m => `
+            <div style="margin-bottom:14px;">
+              <div class="flex-center gap-8 mb-8">
+                <span style="font-size:13px;flex:1">${m.label}</span>
+                <span class="text-sm text-muted">${m.val}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:${m.val}%;background:${m.val >= 80 ? 'linear-gradient(90deg,#10B981,#0EA5E9)' : m.val >= 50 ? 'linear-gradient(90deg,#F59E0B,#EF4444)' : 'linear-gradient(90deg,#EF4444,#F97316)'}"></div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🏛️ Investment Breakdown</div>
+            </div>
+            <table>
+              <tr><th>Program</th><th>Units</th><th>Value</th><th>Jobs</th></tr>
+              <tr><td>Advantage Assam 2.0</td><td>297</td><td>₹2.5L Cr</td><td>1,25,298</td></tr>
+              <tr><td>Other Investments</td><td>115</td><td>₹3.2L Cr</td><td>78,438</td></tr>
+              <tr><td>WEF 2026</td><td>25</td><td>₹1.1L Cr</td><td>28,000</td></tr>
+              <tr><td><b>Total</b></td><td><b>437</b></td><td><b>₹5.7L Cr</b></td><td><b>2,03,736</b></td></tr>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">⚡ Pending Actions</div>
+              <button class="btn btn-sm btn-outline" onclick="navigate('vendor-approval')">View All</button>
+            </div>
+            <ul class="checklist">
+              <li><span class="check-icon">🟡</span><span><b>12 vendors</b> awaiting approval</span></li>
+              <li><span class="check-icon">🔵</span><span><b>FMCG Cohort</b> VDP starts May 15</span></li>
+              <li><span class="check-icon">🔴</span><span><b>Phase 4 ASP</b> go-live in 6 weeks</span></li>
+              <li><span class="check-icon">🟢</span><span><b>Cabinet approval</b> for incentive policy due</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ---- GOVT: Demand Mapping ----
+  'demand-map': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Demand Mapping</h2>
+        <p>Procurement requirements from anchor industries across all sectors</p>
+      </div>
+      <div class="notice blue">ℹ️ <span>105 projects announced in 2 stages (May 2025 & March 2026). Demand mapping covers ₹8,340 Cr of procurement across 7 priority sectors.</span></div>
+      <div class="toolbar">
+        <div class="search-box">🔍 <input type="text" placeholder="Search demands..." oninput="filterDemands(this.value)"></div>
+        <select class="filter-select" onchange="filterDemandsBySector(this.value)">
+          <option value="">All Sectors</option>
+          <option>Electronics</option><option>FMCG</option><option>Energy</option>
+          <option>Oil & Gas</option><option>Hospitality</option><option>Healthcare</option>
+        </select>
+        <select class="filter-select">
+          <option>All Urgency</option><option>High</option><option>Medium</option><option>Low</option>
+        </select>
+        <button class="btn btn-primary ml-auto" onclick="showModal('new-demand')">+ Add Requirement</button>
+      </div>
+      <div id="demand-list">
+        ${DEMANDS.map(d => `
+          <div class="demand-card" onclick="showDemandDetail(${d.id})">
+            <div class="flex-center gap-8 mb-8">
+              <span class="badge ${d.sector === 'Electronics' ? 'blue' : d.sector === 'FMCG' ? 'green' : d.sector === 'Energy' ? 'amber' : 'teal'}">${d.sector}</span>
+              <span class="badge ${d.urgency === 'high' ? 'red' : d.urgency === 'medium' ? 'amber' : 'gray'}">${d.urgency} urgency</span>
+              <span class="ml-auto text-sm text-muted">Deadline: ${d.deadline}</span>
+            </div>
+            <div class="d-title">${d.item}</div>
+            <div class="d-meta">${d.company} · ${d.qty} · ${d.value}</div>
+            <div class="d-footer">
+              ${d.criteria.map(c => `<span class="badge navy">${c}</span>`).join('')}
+              <span class="ml-auto">
+                <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); showModal('match-${d.id}')">View Matches</button>
+              </span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `,
+
+  // ---- GOVT: Supplier Registry ----
+  'supplier-registry': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Supplier Registry</h2>
+        <p>All registered MSMEs on the Assam Supplier Portal</p>
+      </div>
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+        <div class="stat-card green"><span class="stat-icon">✅</span><div class="stat-value">342</div><div class="stat-label">Approved</div></div>
+        <div class="stat-card amber"><span class="stat-icon">⏳</span><div class="stat-value">189</div><div class="stat-label">Pending</div></div>
+        <div class="stat-card blue"><span class="stat-icon">📝</span><div class="stat-value">1,316</div><div class="stat-label">Registered</div></div>
+        <div class="stat-card navy"><span class="stat-icon">🏭</span><div class="stat-value">1,847</div><div class="stat-label">Total</div></div>
+      </div>
+      <div class="toolbar">
+        <div class="search-box">🔍 <input type="text" placeholder="Search suppliers..."></div>
+        <select class="filter-select"><option>All Districts</option><option>Guwahati</option><option>Kamrup</option><option>Dibrugarh</option><option>Jorhat</option></select>
+        <select class="filter-select"><option>All Status</option><option>Approved</option><option>Pending</option><option>Registered</option></select>
+        <button class="btn btn-primary ml-auto" onclick="toast('📥 Exporting registry...')">Export CSV</button>
+      </div>
+      <div class="card" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Company</th><th>District</th><th>Sector</th><th>Turnover</th><th>Employees</th><th>Certs</th><th>Score</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              ${SUPPLIERS.map(s => `<tr>
+                <td><b>${s.name}</b></td>
+                <td>${s.district}</td>
+                <td>${s.sector}</td>
+                <td>${s.turnover}</td>
+                <td>${s.employees}</td>
+                <td>${s.certs.map(c => `<span class="badge navy" style="margin:1px">${c}</span>`).join('') || '<span class="text-muted text-sm">—</span>'}</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <div style="flex:1;height:4px;background:var(--surface2);border-radius:4px">
+                      <div style="width:${s.score}%;height:4px;background:${s.score>=85?'var(--green)':s.score>=70?'var(--accent)':'var(--red)'};border-radius:4px"></div>
+                    </div>
+                    <span class="text-sm fw-600">${s.score}</span>
+                  </div>
+                </td>
+                <td><span class="badge ${s.status === 'approved' ? 'green' : s.status === 'pending' ? 'amber' : 'gray'}">${s.status}</span></td>
+                <td><button class="btn btn-sm btn-ghost" onclick="toast('📋 Opening ${s.name} profile...')">View</button></td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ---- GOVT: Vendor Approval ----
+  'vendor-approval': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Vendor Approvals</h2>
+        <p>Review and approve pending supplier applications</p>
+      </div>
+      <div class="notice amber">⚠️ <span><b>12 vendors</b> are pending approval. Please complete reviews within 5 working days per the service charter.</span></div>
+      <div class="tab-bar">
+        <button class="tab-btn active">Pending (12)</button>
+        <button class="tab-btn" onclick="this.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Under Review (5)</button>
+        <button class="tab-btn" onclick="this.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Approved (342)</button>
+        <button class="tab-btn" onclick="this.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Rejected (18)</button>
+      </div>
+      <div class="card" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Company</th><th>Sector</th><th>Applied For</th><th>Documents</th><th>Score</th><th>Actions</th></tr></thead>
+            <tbody>
+              ${SUPPLIERS.filter(s => s.status !== 'approved').map(s => `<tr>
+                <td>
+                  <div class="fw-600">${s.name}</div>
+                  <div class="text-sm text-muted">${s.district} · ${s.employees} employees</div>
+                </td>
+                <td>${s.sector}</td>
+                <td>${s.turnover} turnover</td>
+                <td>${s.certs.length > 0 ? s.certs.map(c=>`<span class="badge navy" style="margin:1px">${c}</span>`).join('') : '<span class="badge red">Incomplete</span>'}</td>
+                <td><span class="fw-600" style="color:${s.score>=80?'var(--green)':s.score>=65?'var(--accent)':'var(--red)'}">${s.score}/100</span></td>
+                <td>
+                  <div class="action-row">
+                    <button class="btn btn-sm btn-success" onclick="toast('✅ ${s.name} approved!')">Approve</button>
+                    <button class="btn btn-sm btn-ghost" onclick="toast('📋 Viewing ${s.name}...')">Review</button>
+                    <button class="btn btn-sm btn-danger" onclick="toast('❌ Rejected.')">Reject</button>
+                  </div>
+                </td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ---- GOVT/ANCHOR: AI Matchmaking ----
+  'matchmaking': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>AI-Based Matchmaking Engine</h2>
+        <p>Intelligent demand-supply mapping using capability scoring and geo-proximity</p>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔍 Match Query</div></div>
+          <div class="form-full mb-16">
+            <label class="field-label">Select Demand</label>
+            <select class="field-select">
+              ${DEMANDS.map(d => `<option>${d.company} – ${d.item}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-full mb-16">
+            <label class="field-label">Minimum Match Score</label>
+            <input type="range" style="width:100%" min="50" max="100" value="70">
+          </div>
+          <div class="form-full mb-16">
+            <label class="field-label">District Preference</label>
+            <select class="field-select"><option>Any District</option><option>Guwahati</option><option>Kamrup</option><option>Dibrugarh</option></select>
+          </div>
+          <button class="btn btn-primary" style="width:100%" onclick="toast('🤖 AI matching in progress...')">Run AI Match →</button>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🏆 Top Matches</div><span class="badge blue">PCB Packaging · TSAT</span></div>
+          ${[
+            { name: 'Bikash Bora Enterprises', score: 87, reason: 'ISO 9001 certified · ESD packaging capability · Kamrup district' },
+            { name: 'North East Fabricators', score: 82, reason: 'Metal fab with packaging line · Past TSAT reference' },
+            { name: 'Assam Polymers Ltd', score: 74, reason: 'Polymer packaging · Scale-up needed for volume' },
+            { name: 'GreenTech Electronics NE', score: 61, reason: 'Electronics background but packaging cert missing' },
+          ].map((m, i) => `
+            <div style="border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px;background:${i===0?'#F0FDF4':'white'}">
+              <div class="flex-center gap-8 mb-8">
+                <span class="fw-600">${i+1}. ${m.name}</span>
+                <span class="match-score ${m.score>=80?'high':'med'}" style="margin-left:auto">⭐ ${m.score}%</span>
+              </div>
+              <div class="text-sm text-muted" style="margin-bottom:10px">${m.reason}</div>
+              <div class="action-row">
+                <button class="btn btn-sm btn-primary" onclick="toast('📩 Invitation sent to ${m.name}')">Invite</button>
+                <button class="btn btn-sm btn-ghost" onclick="toast('📋 Profile opened')">View Profile</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ---- GOVT: Analytics ----
+  'analytics': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Analytics & Reports</h2>
+        <p>Data-driven insights on procurement trends and MSME participation</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card blue"><span class="stat-icon">📦</span><div class="stat-value">₹2,519 Cr</div><div class="stat-label">Local Procurement YTD</div><div class="stat-change">↑ 18.4% vs last year</div></div>
+        <div class="stat-card green"><span class="stat-icon">💼</span><div class="stat-value">11,740</div><div class="stat-label">Jobs Created (Direct)</div><div class="stat-change">↑ 47% of 25k target</div></div>
+        <div class="stat-card amber"><span class="stat-icon">🏭</span><div class="stat-value">7</div><div class="stat-label">Priority Sectors Active</div><div class="stat-change">Electronics leading</div></div>
+        <div class="stat-card navy"><span class="stat-icon">🌍</span><div class="stat-value">₹5,821 Cr</div><div class="stat-label">Import Substitution</div><div class="stat-change">₹2,000Cr target exceeded</div></div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📊 Sector-wise Localisation Rate</div></div>
+          ${[
+            { sector: 'FMCG', pct: 34, color: 'var(--green)' },
+            { sector: 'Electronics', pct: 22, color: 'var(--blue)' },
+            { sector: 'Energy', pct: 19, color: 'var(--accent)' },
+            { sector: 'Oil & Gas', pct: 27, color: 'var(--teal)' },
+            { sector: 'Healthcare', pct: 11, color: 'var(--orange)' },
+            { sector: 'Hospitality', pct: 41, color: 'var(--green)' },
+            { sector: 'Food Processing', pct: 38, color: 'var(--navy)' },
+          ].map(s => `
+            <div style="margin-bottom:12px">
+              <div class="flex-center gap-8 mb-8">
+                <span style="font-size:13px;width:120px">${s.sector}</span>
+                <div class="progress-bar" style="flex:1">
+                  <div class="progress-fill" style="width:${s.pct*2}%;background:${s.color}"></div>
+                </div>
+                <span class="text-sm fw-600" style="width:36px;text-align:right;color:${s.color}">${s.pct}%</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🗺️ District-wise MSME Density</div></div>
+          ${[
+            { district: 'Kamrup Metro', count: 412, approved: 89 },
+            { district: 'Guwahati', count: 287, approved: 67 },
+            { district: 'Dibrugarh', count: 198, approved: 54 },
+            { district: 'Jorhat', count: 156, approved: 38 },
+            { district: 'Silchar', count: 134, approved: 29 },
+            { district: 'Tezpur', count: 98, approved: 22 },
+          ].map(d => `
+            <div class="flex-center gap-8" style="padding:9px 0;border-bottom:1px solid var(--border)">
+              <span style="flex:1;font-size:13.5px">${d.district}</span>
+              <span class="badge blue">${d.count} reg.</span>
+              <span class="badge green">${d.approved} appr.</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ---- GOVT: VDP ----
+  'vdp': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Vendor Development Programme</h2>
+        <p>Sector-specific onboarding cohorts with technical handholding and certification support</p>
+      </div>
+      <div class="two-col">
+        ${[
+          { name: 'TSAT Electronics Cohort', sector: 'Electronics/Semiconductors', enrolled: 28, capacity: 40, status: 'active', start: 'Apr 2025', anchor: 'TSAT' },
+          { name: 'FMCG Packaging Cohort', sector: 'FMCG/Packaging', enrolled: 35, capacity: 40, status: 'active', start: 'Apr 2025', anchor: 'ITC / HUL / Coca-Cola' },
+          { name: 'Energy Sector Cohort', sector: 'Oil/NRL/ADANI/BCPL', enrolled: 19, capacity: 30, status: 'active', start: 'May 2025', anchor: 'ADANI Power' },
+          { name: 'Hospitality Supply Cohort', sector: 'Hotel & Hospitality', enrolled: 12, capacity: 25, status: 'upcoming', start: 'Jun 2025', anchor: 'Taj / IHG' },
+        ].map(c => `
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">${c.name}</div>
+                <div class="text-sm text-muted">${c.sector} · Anchor: ${c.anchor}</div>
+              </div>
+              <span class="badge ${c.status === 'active' ? 'green' : 'amber'}">${c.status}</span>
+            </div>
+            <div class="flex-center gap-8 mb-8">
+              <span class="text-sm text-muted">Enrollment</span>
+              <span class="ml-auto text-sm fw-600">${c.enrolled}/${c.capacity}</span>
+            </div>
+            <div class="progress-bar mb-16">
+              <div class="progress-fill" style="width:${(c.enrolled/c.capacity)*100}%"></div>
+            </div>
+            <div class="flex-center gap-8">
+              <span class="text-sm text-muted">Start: ${c.start}</span>
+              <button class="btn btn-sm btn-outline ml-auto" onclick="toast('📋 Opening cohort details...')">Manage</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `,
+
+  // ---- GOVT: Implementation Plan ----
+  'implementation': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Implementation Plan</h2>
+        <p>Mission-mode 7-phase execution roadmap</p>
+      </div>
+      <div class="phase-tracker">
+        ${['Phase 1: Launch & Setup','Phase 2: Demand Mapping','Phase 3: MSME Discovery','Phase 4: ASP Dev','Phase 5: VDP','Phase 6: Incentives','Phase 7: Monitoring'].map((p,i) =>
+          `<div class="phase-step ${i<2?'done':i===2?'active-phase':'pending'}">${i<2?'✅ ':''}${p}</div>`
+        ).join('')}
+      </div>
+      ${[
+        { phase: '1', title: 'Program Launch & Institutional Setup', months: 'Month 1–2', status: 'done', items: ['Government Approval · DoIC&PE','Government Order issued','SLMC Constitution created','Mission Charter approved','Review Framework active','Budget sanctioned'] },
+        { phase: '2', title: 'Anchor Industry Demand Mapping', months: 'Month 1–4', status: 'done', items: ['Priority Sectors finalized','Top 100 Anchor Units identified','Procurement Templates standardized','BoM Collection underway','Vendor Criteria defined'] },
+        { phase: '3', title: 'MSME Supplier Discovery & Gap Assessment', months: 'Month 2–5', status: 'active', items: ['Supplier Registry (Udyam + DIC + Industrial Estates)','Industry Validation via FINER/CII/FICCI','Technology Gap Study in progress','Finance Gap assessment ongoing'] },
+        { phase: '4', title: 'Assam Supplier Portal (ASP) Development', months: 'Month 2–8', status: 'active', items: ['BRD approved by CI&C','Technical Architecture designed','RFP floated for Tech Partner','Portal Development underway','AI Matchmaking engine in progress'] },
+      ].map(ph => `
+        <div class="card mb-20">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Phase ${ph.phase}: ${ph.title}</div>
+              <div class="text-sm text-muted">${ph.months}</div>
+            </div>
+            <span class="badge ${ph.status === 'done' ? 'green' : ph.status === 'active' ? 'blue' : 'gray'}">${ph.status === 'done' ? '✅ Completed' : ph.status === 'active' ? '🔄 In Progress' : '⏳ Upcoming'}</span>
+          </div>
+          <ul class="checklist">
+            ${ph.items.map(item => `<li><span class="check-icon">${ph.status==='done'?'✅':'🔵'}</span><span>${item}</span></li>`).join('')}
+          </ul>
+        </div>
+      `).join('')}
+    </div>
+  `,
+
+  // ---- ANCHOR: Dashboard ----
+  'anchor-dashboard': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Procurement Dashboard</h2>
+        <p>TSAT Semiconductor · Localisation tracking & supplier management</p>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-item"><div class="kpi-val">₹4.2 Cr</div><div class="kpi-lbl">Monthly Procurement Budget</div></div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item"><div class="kpi-val">22%</div><div class="kpi-lbl">Current Local Sourcing %</div></div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item"><div class="kpi-val">18</div><div class="kpi-lbl">Approved Local Vendors</div></div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item"><div class="kpi-val">6</div><div class="kpi-lbl">Open Requirements</div></div>
+      </div>
+      <div class="notice blue">ℹ️ <span>Your localisation target for FY 2025-26 is <b>30%</b>. You are currently at 22%. Matching 5 more suppliers could close this gap.</span></div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📦 My Open Requirements</div><button class="btn btn-sm btn-primary" onclick="navigate('post-demand')">+ Post New</button></div>
+          ${DEMANDS.slice(0,3).map(d => `
+            <div style="border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px">
+              <div class="flex-center gap-8 mb-8">
+                <span class="fw-600 text-sm">${d.item}</span>
+                <span class="badge ${d.urgency==='high'?'red':'amber'} ml-auto">${d.urgency}</span>
+              </div>
+              <div class="text-sm text-muted">${d.qty} · ${d.value} · Deadline ${d.deadline}</div>
+              <div style="margin-top:8px">
+                <button class="btn btn-sm btn-outline" onclick="navigate('matchmaking')">View Matches (${Math.floor(Math.random()*15)+3})</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">✅ Approved Vendors</div><span class="badge green">18 active</span></div>
+          ${SUPPLIERS.filter(s=>s.status==='approved').slice(0,4).map(s=>`
+            <div class="flex-center gap-12" style="padding:10px 0;border-bottom:1px solid var(--border)">
+              <div style="width:36px;height:36px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:16px">🏭</div>
+              <div style="flex:1">
+                <div class="fw-600" style="font-size:13px">${s.name}</div>
+                <div class="text-sm text-muted">${s.sector} · ${s.district}</div>
+              </div>
+              <span class="fw-600" style="color:var(--green);font-size:13px">${s.score}</span>
+            </div>
+          `).join('')}
+          <button class="btn btn-outline" style="width:100%;margin-top:12px" onclick="navigate('approved-vendors')">View All Vendors</button>
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ---- ANCHOR: Post Demand ----
+  'post-demand': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Post Procurement Requirement</h2>
+        <p>List your procurement needs on the portal for MSME supplier matching</p>
+      </div>
+      <div class="card" style="max-width:680px">
+        <div class="card-header"><div class="card-title">📋 New Demand Listing</div></div>
+        <div class="form-row">
+          <div><label class="field-label">Item / Component Name *</label><input class="field-input" placeholder="e.g. PCB Protective Packaging"></div>
+          <div><label class="field-label">Sector *</label><select class="field-select"><option>Electronics</option><option>FMCG</option><option>Energy</option><option>Oil & Gas</option></select></div>
+        </div>
+        <div class="form-full"><label class="field-label">Specification / Description *</label><textarea class="field-textarea" placeholder="Describe technical requirements, dimensions, materials, etc."></textarea></div>
+        <div class="form-row">
+          <div><label class="field-label">Monthly Quantity Required *</label><input class="field-input" placeholder="e.g. 50,000 units"></div>
+          <div><label class="field-label">Estimated Value (₹/month) *</label><input class="field-input" placeholder="e.g. 18,00,000"></div>
+        </div>
+        <div class="form-row">
+          <div><label class="field-label">Deadline for Vendor Identification</label><input class="field-input" type="date" value="2025-06-30"></div>
+          <div><label class="field-label">Urgency Level</label><select class="field-select"><option>High</option><option>Medium</option><option>Low</option></select></div>
+        </div>
+        <div class="form-full"><label class="field-label">Required Certifications</label><input class="field-input" placeholder="e.g. ISO 9001, BIS, FSSAI (comma separated)"></div>
+        <div class="form-full"><label class="field-label">Preferred Districts</label><input class="field-input" placeholder="e.g. Kamrup, Guwahati (leave blank for statewide)"></div>
+        <div class="form-full"><label class="field-label">Bill of Materials (BoM) / Specs File</label>
+          <div style="border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;color:var(--text-muted);font-size:13px;cursor:pointer" onclick="toast('📁 File upload simulated')">
+            📎 Click to upload BoM / technical drawings
+          </div>
+        </div>
+        <div class="modal-footer" style="border:none;padding-top:12px">
+          <button class="btn btn-ghost" onclick="navigate('my-demands')">Cancel</button>
+          <button class="btn btn-primary" onclick="toast('✅ Requirement posted! AI matching will notify eligible MSMEs.');navigate('my-demands')">Post Requirement →</button>
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ---- ANCHOR: My Demands ----
+  'my-demands': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>My Demand Listings</h2>
+        <p>All procurement requirements posted by TSAT Semiconductor</p>
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-primary" onclick="navigate('post-demand')">+ Post New Requirement</button>
+        <button class="btn btn-ghost ml-auto" onclick="toast('📤 Exporting listings...')">Export</button>
+      </div>
+      <div class="card" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Item</th><th>Quantity</th><th>Value</th><th>Deadline</th><th>Applications</th><th>Urgency</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              ${DEMANDS.map(d => `<tr>
+                <td>
+                  <div class="fw-600">${d.item}</div>
+                  <div class="text-sm text-muted">${d.criteria.join(' · ')}</div>
+                </td>
+                <td>${d.qty}</td>
+                <td>${d.value}</td>
+                <td>${d.deadline}</td>
+                <td><span class="badge blue">${Math.floor(Math.random()*15)+2} applied</span></td>
+                <td><span class="badge ${d.urgency==='high'?'red':d.urgency==='medium'?'amber':'gray'}">${d.urgency}</span></td>
+                <td><span class="badge green">Open</span></td>
+                <td>
+                  <div class="action-row">
+                    <button class="btn btn-sm btn-outline" onclick="navigate('matchmaking')">Matches</button>
+                    <button class="btn btn-sm btn-ghost" onclick="toast('✏️ Edit form opened')">Edit</button>
+                  </div>
+                </td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ---- ANCHOR: Approved Vendors ----
+  'approved-vendors': () => pageRenderers['supplier-registry'](),
+
+  // ---- ANCHOR: Vendor Pipeline ----
+  'vendor-pipeline': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Vendor Onboarding Pipeline</h2>
+        <p>Track suppliers through Expression of Interest → Evaluation → Approval</p>
+      </div>
+      <div class="two-col">
+        ${['Expression of Interest', 'Document Verification', 'Factory Audit', 'Final Approval'].map((stage, i) => {
+          const counts = [8, 5, 3, 2];
+          return `<div class="card">
+            <div class="card-header">
+              <div class="card-title">${['📝','🔍','🏭','✅'][i]} ${stage}</div>
+              <span class="badge ${i===3?'green':i===2?'blue':'amber'}">${counts[i]} vendors</span>
+            </div>
+            ${SUPPLIERS.slice(i, i+counts[i]).slice(0,3).map(s => `
+              <div style="border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px">
+                <div class="fw-600" style="font-size:13px">${s.name}</div>
+                <div class="text-sm text-muted mb-8">${s.sector} · ${s.district}</div>
+                <div class="action-row">
+                  ${i < 3 ? `<button class="btn btn-sm btn-primary" onclick="toast('→ Moved to next stage')">Advance</button>` : ''}
+                  <button class="btn btn-sm btn-ghost" onclick="toast('📋 Viewing ${s.name}')">View</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `,
+
+  // ---- ANCHOR: Localisation Report ----
+  'localisation-report': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Localisation Report</h2>
+        <p>FY 2025-26 · Local sourcing performance vs targets</p>
+      </div>
+      <div class="notice green">✅ <span>Your localisation rate has improved by <b>8.2%</b> since onboarding. You are on track for the 30% target with existing pipeline.</span></div>
+      <div class="stats-grid">
+        <div class="stat-card blue"><span class="stat-icon">📊</span><div class="stat-value">22%</div><div class="stat-label">Current Local %</div><div class="stat-change">Target: 30% by Dec 2025</div></div>
+        <div class="stat-card green"><span class="stat-icon">💰</span><div class="stat-value">₹92L</div><div class="stat-label">Local Spend (Monthly)</div><div class="stat-change">↑ from ₹51L last year</div></div>
+        <div class="stat-card amber"><span class="stat-icon">🏭</span><div class="stat-value">18</div><div class="stat-label">Local Vendors Used</div><div class="stat-change">↑ from 7 last year</div></div>
+        <div class="stat-card navy"><span class="stat-icon">🎯</span><div class="stat-value">₹38L</div><div class="stat-label">Gap to Target</div><div class="stat-change">Requires 5 more vendors</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">📈 Category-wise Local Procurement</div><button class="btn btn-sm btn-outline" onclick="toast('📄 Report downloaded')">Download PDF</button></div>
+        <table>
+          <thead><tr><th>Category</th><th>Total Spend</th><th>Local Spend</th><th>Localisation %</th><th>Target</th><th>Gap</th></tr></thead>
+          <tbody>
+            ${[
+              { cat: 'Packaging', total: '₹42L', local: '₹38L', pct: 90, target: 80 },
+              { cat: 'MRO Supplies', total: '₹18L', local: '₹12L', pct: 67, target: 60 },
+              { cat: 'Electronics Components', total: '₹1.2Cr', local: '₹8L', pct: 7, target: 25 },
+              { cat: 'Logistics Services', total: '₹22L', local: '₹20L', pct: 91, target: 90 },
+              { cat: 'Chemical Inputs', total: '₹35L', local: '₹4L', pct: 11, target: 20 },
+            ].map(r => `<tr>
+              <td>${r.cat}</td>
+              <td>${r.total}</td>
+              <td>${r.local}</td>
+              <td>
+                <div class="flex-center gap-8">
+                  <div class="progress-bar" style="width:80px">
+                    <div class="progress-fill" style="width:${r.pct}%;background:${r.pct>=r.target?'var(--green)':'var(--red)'}"></div>
+                  </div>
+                  <span class="fw-600" style="color:${r.pct>=r.target?'var(--green)':'var(--red)'}">${r.pct}%</span>
+                </div>
+              </td>
+              <td>${r.target}%</td>
+              <td><span class="badge ${r.pct>=r.target?'green':'red'}">${r.pct>=r.target?'✅ Met':'↑ Needed'}</span></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `,
+
+  // ---- MSME: Dashboard ----
+  'msme-dashboard': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Supplier Dashboard</h2>
+        <p>Bikash Bora Enterprises · Packaging & Fabrication · Kamrup</p>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-item"><div class="kpi-val">87</div><div class="kpi-lbl">Capability Score</div></div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item"><div class="kpi-val">3</div><div class="kpi-lbl">Active Applications</div></div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item"><div class="kpi-val">1</div><div class="kpi-lbl">Shortlisted</div></div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item"><div class="kpi-val">8</div><div class="kpi-lbl">New Opportunities</div></div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📋 My Applications</div><button class="btn btn-sm btn-outline" onclick="navigate('my-applications')">View All</button></div>
+          <div class="timeline">
+            ${MY_APPLICATIONS.map(a => `
+              <div class="timeline-item">
+                <div class="timeline-dot ${a.status==='shortlisted'?'green':a.status==='rejected'?'gray':'blue'}"></div>
+                <div class="timeline-meta">${a.company} · ${a.applied}</div>
+                <div class="timeline-text fw-600">${a.item}</div>
+                <div class="text-sm" style="margin-top:2px">
+                  <span class="badge ${a.status==='shortlisted'?'green':a.status==='rejected'?'red':'amber'}">${a.status}</span>
+                  <span class="text-muted" style="margin-left:6px">${a.next}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">🔔 Recent Activity</div></div>
+            <div class="timeline">
+              ${TIMELINE_EVENTS.map(e => `
+                <div class="timeline-item">
+                  <div class="timeline-dot ${e.type}"></div>
+                  <div class="timeline-meta">${e.date}</div>
+                  <div class="timeline-text">${e.text}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">💡 Recommended Actions</div></div>
+            <ul class="checklist">
+              <li><span class="check-icon">🎯</span><span>Complete <b>FSSAI certification</b> to unlock FMCG opportunities</span></li>
+              <li><span class="check-icon">📝</span><span>Upload updated <b>financials</b> to raise your score from 87→92</span></li>
+              <li><span class="check-icon">🎓</span><span>Enroll in <b>FMCG Packaging VDP Cohort</b> (starts May 15)</span></li>
+              <li><span class="check-icon">💰</span><span>Apply for <b>TReDS working capital</b> support</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ---- MSME: Profile ----
+  'my-profile': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Company Profile</h2>
+        <p>Your supplier profile on the Assam Supplier Portal</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🏢 Company Information</div>
+              <button class="btn btn-sm btn-outline" onclick="toast('✏️ Edit mode enabled')">Edit</button>
+            </div>
+            <table style="width:100%">
+              ${[
+                ['Company Name', 'Bikash Bora Enterprises'],
+                ['Udyam No.', 'UDYAM-AS-04-0012847'],
+                ['District', 'Kamrup Metro, Assam'],
+                ['Sector', 'Packaging & Metal Fabrication'],
+                ['Annual Turnover', '₹2.4 Crore (FY 2024-25)'],
+                ['Employees', '38 permanent + 12 contract'],
+                ['GST Number', '18AAXFB3425Q1ZD'],
+                ['Contact', 'bikash.bora@bbenterprises.in'],
+              ].map(([k,v]) => `<tr><td class="text-muted text-sm" style="padding:8px 0;width:40%">${k}</td><td class="fw-600" style="padding:8px 0">${v}</td></tr>`).join('')}
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🏅 Certifications</div>
+              <button class="btn btn-sm btn-primary" onclick="toast('📋 Upload certification form...')">+ Add</button>
+            </div>
+            ${[
+              { cert: 'ISO 9001:2015', status: 'valid', expiry: 'Dec 2026' },
+              { cert: 'FSSAI Basic License', status: 'expired', expiry: 'Mar 2025' },
+              { cert: 'BIS Mark', status: 'pending', expiry: '—' },
+            ].map(c => `
+              <div class="flex-center gap-12" style="padding:10px 0;border-bottom:1px solid var(--border)">
+                <span style="flex:1;fw-600">${c.cert}</span>
+                <span class="text-sm text-muted">${c.expiry}</span>
+                <span class="badge ${c.status==='valid'?'green':c.status==='expired'?'red':'amber'}">${c.status}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">⭐ Capability Score: 87/100</div></div>
+            ${[
+              { label: 'Quality Systems', score: 90, max: 100 },
+              { label: 'Financial Health', score: 82, max: 100 },
+              { label: 'Production Capacity', score: 88, max: 100 },
+              { label: 'Delivery Reliability', score: 85, max: 100 },
+              { label: 'Certifications', score: 76, max: 100 },
+              { label: 'Digital Readiness', score: 70, max: 100 },
+            ].map(s => `
+              <div style="margin-bottom:12px">
+                <div class="flex-center gap-8 mb-8">
+                  <span class="text-sm">${s.label}</span>
+                  <span class="text-sm fw-600 ml-auto">${s.score}</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:${s.score}%"></div>
+                </div>
+              </div>
+            `).join('')}
+            <div class="notice blue" style="margin-top:12px">ℹ️ <span>Government-verified profile. Score improves with certifications and order history.</span></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">🏭 Production Capacity</div></div>
+            ${[
+              ['Packaging Lines', '3 (2 auto, 1 semi-auto)'],
+              ['Monthly Capacity', '80,000 units packaging'],
+              ['Infrastructure', '8,000 sq ft plant'],
+              ['Machinery', 'Thermoforming + Corrugation'],
+            ].map(([k,v]) => `<div class="flex-center gap-8" style="padding:8px 0;border-bottom:1px solid var(--border)"><span class="text-muted text-sm">${k}</span><span class="fw-600 ml-auto text-sm">${v}</span></div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ---- MSME: Browse Demands ----
+  'browse-demands': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Browse Opportunities</h2>
+        <p>Procurement requirements from anchor industries — matched to your capabilities</p>
+      </div>
+      <div class="notice green">✅ <span>Based on your profile, you have <b>high compatibility</b> with 3 active requirements. Apply early!</span></div>
+      <div class="toolbar">
+        <div class="search-box">🔍 <input type="text" placeholder="Search opportunities..."></div>
+        <select class="filter-select"><option>All Sectors</option><option>FMCG</option><option>Electronics</option><option>Energy</option></select>
+        <select class="filter-select"><option>Best Match First</option><option>Highest Value</option><option>Earliest Deadline</option></select>
+      </div>
+      ${DEMANDS.map((d, i) => {
+        const scores = [87, 74, 45, 91, 38, 55];
+        const score = scores[i] || 50;
+        return `
+        <div class="demand-card" onclick="showModal('apply-${d.id}')">
+          <div class="flex-center gap-8 mb-8">
+            <span class="badge ${d.sector==='Electronics'?'blue':d.sector==='FMCG'?'green':d.sector==='Energy'?'amber':'teal'}">${d.sector}</span>
+            <span class="match-score ${score>=75?'high':'med'}">⭐ ${score}% match</span>
+            <span class="ml-auto text-sm text-muted">Deadline: ${d.deadline}</span>
+          </div>
+          <div class="d-title">${d.item}</div>
+          <div class="d-meta">${d.company} · ${d.qty} · ${d.value}</div>
+          <div class="d-footer">
+            ${d.criteria.map(c=>`<span class="badge navy">${c}</span>`).join('')}
+            <span class="ml-auto">
+              <button class="btn btn-sm btn-primary" onclick="event.stopPropagation();toast('📋 Application form for ${d.item}')">Apply Now</button>
+            </span>
+          </div>
+        </div>
+      `}).join('')}
+    </div>
+  `,
+
+  // ---- MSME: My Applications ----
+  'my-applications': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>My Applications</h2>
+        <p>Track your vendor applications and approval status</p>
+      </div>
+      <div class="card" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Opportunity</th><th>Company</th><th>Applied</th><th>Status</th><th>Next Step</th><th></th></tr></thead>
+            <tbody>
+              ${MY_APPLICATIONS.map(a => `<tr>
+                <td class="fw-600">${a.item}</td>
+                <td>${a.company}</td>
+                <td>${a.applied}</td>
+                <td><span class="badge ${a.status==='shortlisted'?'green':a.status==='rejected'?'red':'amber'}">${a.status}</span></td>
+                <td class="text-sm text-muted">${a.next}</td>
+                <td><button class="btn btn-sm btn-ghost" onclick="toast('📋 Viewing application...')">Details</button></td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="notice amber" style="margin-top:16px">⚠️ <span>Your application to <b>Hindustan Coca-Cola</b> was rejected due to missing FSSAI certification. <a href="#" onclick="navigate('certifications');return false;" style="color:var(--blue)">Apply for certification →</a></span></div>
+    </div>
+  `,
+
+  // ---- MSME: Finance & TReDS ----
+  'finance-support': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Finance & TReDS Support</h2>
+        <p>Working capital facilitation, credit support, and payment security for MSMEs</p>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><div class="card-title">🏦 TReDS Integration</div><span class="badge green">Available</span></div>
+          <p style="color:var(--text-muted);font-size:13.5px;margin-bottom:16px">Trade Receivables Discounting System (TReDS) enables MSMEs to convert trade receivables into immediate working capital at competitive interest rates.</p>
+          ${[
+            { label: 'Eligible Receivables', val: '₹8.4L' },
+            { label: 'Average Discount Rate', val: '9.2% p.a.' },
+            { label: 'Settlement Time', val: '24-48 hours' },
+            { label: 'Platform Partners', val: 'RXIL, M1xchange, INVOICEMART' },
+          ].map(i => `<div class="flex-center gap-8" style="padding:8px 0;border-bottom:1px solid var(--border)"><span class="text-muted text-sm">${i.label}</span><span class="fw-600 ml-auto text-sm">${i.val}</span></div>`).join('')}
+          <button class="btn btn-primary" style="width:100%;margin-top:16px" onclick="toast('🏦 Connecting to TReDS platform...')">Access TReDS Platform →</button>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">💳 Credit Support Schemes</div></div>
+          ${[
+            { name: 'CGTMSE Credit Guarantee', amount: 'Up to ₹2Cr', rate: 'Market rate', eligibility: 'All MSMEs' },
+            { name: 'SIDBI MSME Loan', amount: 'Up to ₹5Cr', rate: '8.5% p.a.', eligibility: 'Approved vendors' },
+            { name: 'Assam MSME Subsidy Loan', amount: 'Up to ₹50L', rate: '4% p.a.', eligibility: 'Registered on ASP' },
+          ].map(s => `
+            <div style="border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px">
+              <div class="fw-600 mb-8">${s.name}</div>
+              <div class="flex-center gap-8 text-sm text-muted mb-8">
+                <span>Amount: <b style="color:var(--text)">${s.amount}</b></span>
+                <span>Rate: <b style="color:var(--text)">${s.rate}</b></span>
+              </div>
+              <div class="text-sm text-muted mb-8">Eligibility: ${s.eligibility}</div>
+              <button class="btn btn-sm btn-outline" onclick="toast('📋 Opening ${s.name} application...')">Apply</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ---- MSME: Certifications ----
+  'certifications': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Certifications & Compliance</h2>
+        <p>Upgrade your certifications to unlock higher-value procurement opportunities</p>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">🏅 Your Certifications</div></div>
+        <table>
+          <thead><tr><th>Certification</th><th>Status</th><th>Expiry</th><th>Unlocks</th><th>Action</th></tr></thead>
+          <tbody>
+            ${[
+              { cert: 'ISO 9001:2015', status: 'valid', expiry: 'Dec 2026', unlocks: 'All sectors' },
+              { cert: 'FSSAI Basic License', status: 'expired', expiry: 'Mar 2025', unlocks: 'FMCG, Food Processing' },
+              { cert: 'BIS Mark (IS 694)', status: 'not-applied', expiry: '—', unlocks: 'Electrical, Energy' },
+              { cert: 'ESD Safe Packaging', status: 'not-applied', expiry: '—', unlocks: 'Electronics, Semiconductors' },
+              { cert: 'NABL Accreditation', status: 'not-applied', expiry: '—', unlocks: 'Healthcare, Pharma' },
+            ].map(c => `<tr>
+              <td class="fw-600">${c.cert}</td>
+              <td><span class="badge ${c.status==='valid'?'green':c.status==='expired'?'red':'gray'}">${c.status==='not-applied'?'Not Applied':c.status}</span></td>
+              <td>${c.expiry}</td>
+              <td class="text-muted text-sm">${c.unlocks}</td>
+              <td>
+                ${c.status==='valid' ? '<span class="text-sm text-muted">Valid ✓</span>' :
+                  c.status==='expired' ? '<button class="btn btn-sm btn-danger" onclick="toast(\'🔄 Renewal application started\')">Renew Now</button>' :
+                  '<button class="btn btn-sm btn-primary" onclick="toast(\'📋 Certification guidance opened\')">Apply</button>'}
+              </td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="notice amber">⚠️ <span>Renewing your <b>FSSAI license</b> will make you eligible for 2 additional high-value opportunities worth ₹57L/month combined.</span></div>
+    </div>
+  `,
+
+  // ---- MSME: VDP Enroll ----
+  'vdp-enroll': () => pageRenderers['vdp'](),
+
+  // ---- GOVT: Incentives ----
+  'incentives': () => `
+    <div class="page active">
+      <div class="page-header">
+        <h2>Incentive Tracking</h2>
+        <p>Localisation-linked incentives for anchor firms achieving local sourcing targets</p>
+      </div>
+      <div class="notice blue">ℹ️ <span>Cabinet approval for the localisation incentive policy is expected by Month 7. Policy draft submitted to DoIC&PE on Apr 15, 2025.</span></div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">💰 Proposed Incentive Structure</div><span class="badge amber">Policy Draft</span></div>
+        <table>
+          <thead><tr><th>Localisation Tier</th><th>Incentive Type</th><th>Benefit</th><th>Status</th></tr></thead>
+          <tbody>
+            ${[
+              { tier: '20–30% local sourcing', type: 'GST reimbursement', benefit: '50% of SGST for 3 years', status: 'Proposed' },
+              { tier: '30–50% local sourcing', type: 'Power tariff subsidy', benefit: '₹1/unit for 5 years', status: 'Proposed' },
+              { tier: '50%+ local sourcing', type: 'Capital subsidy + Award', benefit: '5% on capex + SLMC award', status: 'Proposed' },
+              { tier: 'All tiers', type: 'Priority land allotment', benefit: 'Fast-track industrial land', status: 'Approved' },
+            ].map(r => `<tr>
+              <td class="fw-600">${r.tier}</td>
+              <td>${r.type}</td>
+              <td>${r.benefit}</td>
+              <td><span class="badge ${r.status==='Approved'?'green':'amber'}">${r.status}</span></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">🏆 Top Performing Anchors (Localisation %)</div></div>
+        ${[
+          { company: 'Nezone Group', sector: 'Manufacturing', pct: 44 },
+          { company: 'BCPL Assam', sector: 'Petrochemicals', pct: 38 },
+          { company: 'ITC Limited', sector: 'FMCG', pct: 34 },
+          { company: 'OIL India', sector: 'Oil & Gas', pct: 27 },
+          { company: 'TSAT Semiconductor', sector: 'Electronics', pct: 22 },
+        ].map(c => `
+          <div class="flex-center gap-12" style="padding:10px 0;border-bottom:1px solid var(--border)">
+            <span style="width:200px;fw-600">${c.company}</span>
+            <span class="badge gray" style="width:130px">${c.sector}</span>
+            <div class="progress-bar" style="flex:1">
+              <div class="progress-fill" style="width:${c.pct*2}%;background:${c.pct>=30?'var(--green)':'var(--accent)'}"></div>
+            </div>
+            <span class="fw-600 ml-auto" style="width:40px;color:${c.pct>=30?'var(--green)':'var(--accent)'}">${c.pct}%</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `,
+};
+
+// ===== MODAL =====
+function showModal(type) {
+  const box = document.getElementById('modal-content');
+  if (type === 'new-demand') {
+    box.innerHTML = `
+      <h3>Post New Requirement</h3>
+      <p class="modal-sub">Add a procurement requirement to the portal for MSME matching</p>
+      <div class="form-row">
+        <div><label class="field-label">Item Name *</label><input class="field-input" placeholder="Component or material"></div>
+        <div><label class="field-label">Sector *</label><select class="field-select"><option>Electronics</option><option>FMCG</option><option>Energy</option></select></div>
+      </div>
+      <div class="form-full"><label class="field-label">Monthly Quantity</label><input class="field-input" placeholder="e.g. 50,000 units"></div>
+      <div class="form-full"><label class="field-label">Estimated Value (₹/month)</label><input class="field-input" placeholder="e.g. 18,00,000"></div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="toast('✅ Requirement posted successfully!');closeModal()">Post Requirement</button>
+      </div>`;
+  } else {
+    box.innerHTML = `<h3>Apply for Opportunity</h3><p class="modal-sub">Submit your expression of interest for this procurement requirement.</p>
+      <div class="form-full"><label class="field-label">Cover Note</label><textarea class="field-textarea" placeholder="Briefly describe your capability to fulfil this requirement..."></textarea></div>
+      <div class="form-full"><label class="field-label">Quoted Price (₹/unit)</label><input class="field-input" placeholder="Your competitive price"></div>
+      <div class="form-full"><label class="field-label">Lead Time</label><input class="field-input" placeholder="e.g. 4 weeks from PO"></div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="toast('✅ Application submitted! The buyer will review within 5 days.');closeModal()">Submit Application</button>
+      </div>`;
+  }
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+// ===== TOAST =====
+function toast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ===== FILTER =====
+function filterDemands(q) {
+  const cards = document.querySelectorAll('.demand-card');
+  cards.forEach(c => {
+    c.style.display = c.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function filterDemandsBySector(sector) {
+  if (!sector) { document.querySelectorAll('.demand-card').forEach(c => c.style.display = ''); return; }
+  document.querySelectorAll('.demand-card').forEach(c => {
+    c.style.display = c.textContent.includes(sector) ? '' : 'none';
+  });
+}
+
+// init
+selectRole('msme');
+</script>
+</body>
+</html>
