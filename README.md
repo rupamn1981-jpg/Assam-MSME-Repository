@@ -1,0 +1,6 @@
+Here's the fully functional Assam Supplier Portal (ASP) — a complete multi-user web application built from your document.
+3 distinct user roles — switch between them on the login screen:
+🏛️ Government Admin (SLMC) — Leadership dashboard with live KPIs (₹5.7L Cr investments, 412 anchor units), demand mapping with all 105 projects, supplier registry, vendor approval workflow, AI matchmaking engine, analytics by sector/district, implementation phase tracker, VDP cohort management, and incentive policy tracking.
+🏭 Anchor Industry (TSAT Semiconductor) — Procurement dashboard, post new requirements (with full form), view demand listings, run AI-based supplier matching, manage vendor pipeline (EoI → Audit → Approval), and view localisation compliance reports vs targets.
+🔧 MSME / Supplier (Bikash Bora Enterprises) — Supplier dashboard with capability score (87/100), browse and apply for opportunities with match scores, track application status, manage profile & certifications, access TReDS finance support, and enroll in VDP training cohorts.
+Features throughout: search & filter, modal forms, progress bars, status badges, toast notifications, timeline tracking, and responsive layout — all based directly on the data from your presentation.
